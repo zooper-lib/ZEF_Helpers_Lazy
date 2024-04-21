@@ -10,28 +10,31 @@ class Config {
   }
 }
 
-void main() {
+void main() async {
   Lazy<Config> lazyConfig = Lazy<Config>(
     factory: () => Config("Initial data loaded"),
     onCreate: (config) => print("Config created with data: ${config.data}"),
     shouldExpire: (config) => config.data == "Expired data",
     onDestroy: (config) =>
         print("Config with data '${config.data}' is being destroyed"),
-    expiryDuration: Duration(seconds: 10), // Example expiry duration
+    expiryDuration: Duration(milliseconds: 10), // Example expiry duration
   );
 
   // Access the lazy instance to trigger creation
   print("Accessing lazyConfig for the first time:");
-  lazyConfig.value.display();
+  final accessOne = await lazyConfig.value;
+  accessOne.display();
 
   // Access it again to show that it doesn't recreate the instance
   print("\nAccessing lazyConfig again:");
-  lazyConfig.value.display();
+  final accessTwo = await lazyConfig.value;
+  accessTwo.display();
 
   // Simulate expiry by waiting longer than the expiry duration
-  Future.delayed(Duration(seconds: 15), () {
+  Future.delayed(Duration(milliseconds: 20), () async {
     print("\nAccessing lazyConfig after expiry:");
-    lazyConfig.value.display(); // This should recreate the instance
+    final accessThree = await lazyConfig.value;
+    accessThree.display(); // This should recreate the instance
   });
 
   // Resetting the lazy instance manually
@@ -40,5 +43,6 @@ void main() {
 
   // Accessing after reset to show it recreates the instance
   print("\nAccessing lazyConfig after reset:");
-  lazyConfig.value.display();
+  final accessFour = await lazyConfig.value;
+  accessFour.display();
 }
