@@ -43,7 +43,7 @@ Lazy<Config> lazyConfig = Lazy<Config>(
 Access the lazy-initialized object:
 
 ```dart
-Config config = lazyConfig.value; // The Config object is created at this point if not already initialized.
+Config config = await lazyConfig.value; // The Config object is created at this point if not already initialized.
 ```
 
 ## Contributing
